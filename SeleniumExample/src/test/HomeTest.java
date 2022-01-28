@@ -8,9 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import page.Home;
+
 public class HomeTest 
 {
-	WebDriver driver;
+	private WebDriver driver;
+	private Home homePage;
 	
 	@BeforeAll
 	static void Initialize()
@@ -22,14 +25,30 @@ public class HomeTest
 	void StartupDriver()
 	{
 		driver = new ChromeDriver();
+		homePage = new Home(driver);
 	}
 	
 	@Test
-    void Navigation() 
+    void testNavigation() 
 	{
-		driver.get("https://selenium.dev");
+		homePage.goToHomeUrl();
 		Assertions.assertEquals("https://www.selenium.dev/", driver.getCurrentUrl());
-		driver.quit();
+	}
+	
+	@Test
+	void validateAbout()
+	{
+		homePage.goToHomeUrl();
+		boolean isAboutDisplayed = homePage.isAboutDisplayed();
+		Assertions.assertTrue(isAboutDisplayed, "About option is not displayed.");
+	}
+	
+	@Test
+	void clickAboutSeleniumLink()
+	{
+		homePage.goToHomeUrl();
+		homePage.clickAboutSeleniumOption();
+		Assertions.assertEquals("https://www.selenium.dev/about/", driver.getCurrentUrl());
 	}
 	
 	@AfterEach
